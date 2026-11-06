@@ -790,7 +790,7 @@ var SALK={
   k24:{story:["Kalliit suojaukset","Suojattu korkealla hinnalla, kun sopimuksia myytiin. Riski on pieni, mutta markkina-arvo on negatiivinen ja kate ohut."],name:"Kiinteä määräaikainen 24 kk",sold:[10,12,10,10,21,20,47,110],sp:[104,130,135,102,66,55,87,72],kv:[6,7,7,5,3,2,4,4],hm:[1,1,1.04,1,1,1,1,1]},
   tois:{story:["Ylisuojattu","Suojattu ennen kuin asiakaspoistuma kasvoi. Leuto talvi on riski, koska ylimääräinen suojaus myydään halvemmalla."],name:"Toistaiseksi voimassa oleva",sold:[14,16,14,12,20,14,24,40],sp:[99,124,128,97,63,53,83,69],kv:[5,6,6,4,2.5,1.5,3.5,3.5]},
   spot:{story:["Hinta asiakkaalla","Pörssihinta menee asiakkaalle. Riski syntyy vain kuormaennusteesta."],name:"SPOT (pörssisähkö)",spot:true,sold:[61,70,63,56,104,83,157,600],sp:null,kv:[6,7,7,5,3,2,4,4],mg:3.6},
-  b2b:{story:["Alisuojattu, aluehintaero auki","Talvijaksot ovat alle politiikan, ja suojaus on vain systeemihintaan pörssissä. Kylmä talvi, aluehintaero ja vakuudet ovat riski."],name:"B2B kiinteät",sold:[12,14,13,11,21,15,29,55],sp:[96,120,125,95,61,50,80,67],kv:[3,3,3,2,1.5,1,2,2]}
+  b2b:{story:["Alisuojattu, aluehintaero auki","Talvijaksot ovat alle politiikan, ja suojaus on vain systeemihintaan pörssissä. Kylmä talvi ja aluehintaero ovat riski."],name:"B2B kiinteät",sold:[12,14,13,11,21,15,29,55],sp:[96,120,125,95,61,50,80,67],kv:[3,3,3,2,1.5,1,2,2]}
 };
 /* Tyyppikäyrät (ETRM: Tyyppikäyrät): [nimi, kulutusvaikutus €/MWh, talvipaino] */
 var TK={kt:["Kerrostalo",2.0,.45],rt:["Rivitalo, ei sähkölämmitystä",3.0,.5],os:["Omakotitalo, sähkölämmitys",8.0,.78],om:["Omakotitalo, maalämpö",6.5,.72],ov:["Omakotitalo, varaava sähkölämmitys",-1.0,.7],oa:["Omakotitalo, aurinkopaneelit",5.5,.62],mt:["Maatila",4.0,.55],pa:["Palvelut ja toimisto",3.5,.5],te:["Teollisuus, kaksivuoro",1.5,.45]};
@@ -1082,7 +1082,7 @@ function trHtml(T,P){
   return '<div class="riskgrid">'+T.map(function(t){return '<div class="rbox"><div class="rl">'+t.lab+'</div><div><span class="rv">'+nf(t.risk,0)+' k€</span><span class="rpill '+t.cls+'">'+RCLS[t.cls]+'</span></div><div class="rd">Odotettu tulos <b>'+nf(t.R0,0)+' k€</b>, heikko tulos <b>'+nf(t.weak,0)+' k€</b></div>'+
     '<div class="sensbox">'+bar("Kylmä talvi",t.cold,t.worstK==="cold")+bar("Leuto talvi",t.mild,t.worstK==="mild")+bar(SCN[t.shockK],t.shock,t.worstK==="shock")+M.xsc.map(function(x){return bar(XSC[x].n,t["x:"+x]||0,t.worstK==="ext"&&t.extK===x);}).join("")+bar("Ennustevirhe ±"+nf(t.sv,0)+" %",t.load)+bar("Aluehintaero ±"+nf(M.rules.epadVol,0)+" €",t.epad)+'</div>'+
     '<div class="rd" style="margin-top:6px">Myyntihinta <b>'+nf(t.sellP,1)+'</b>, hankinta <b>'+nf(t.buyP,1)+'</b>, futuuri <b>'+nf(t.fwP,1)+'</b> €/MWh<br>'+(t.open>=0?'Avoin positio':'Ylisuojaus')+' <b>'+nf(Math.abs(t.open),1)+' GWh</b> / '+nf(t.V,1)+' GWh</div></div>';}).join("")+'</div>'+(P?parInfo(T,P):'')+
-    '<details class="flowd" data-keep="trinfo"'+(M.keep.trinfo?' open':'')+'><summary>Miten PaR lasketaan</summary><p class="note" style="margin-top:8px">Tulos riskissä (Profit at Risk, PaR) on odotetun ja heikon tuloksen erotus euroina. Mittari on skenaariopohjainen: heikko tulos lasketaan yhtiön omilla skenaarioilla eikä tilastollisella luottamustasolla. Samat skenaariot ovat käytössä Skenaariot-välilehdellä ja vakuuslaskennassa. Heikko tulos on pahin skenaarioista (kylmä talvi, leuto talvi tai hintasokki, korostettu palkki), ja siihen lisätään kuormaennusteen virhe ja suojaamattoman aluehintaeron (EPAD) riski. Sääskenaariot painotetaan jakson sääherkkyydellä, hintasokki on suurin lähijaksoilla. Kylmässä talvessa myös profiilikustannus kasvaa, ja leudossa toistaiseksi-asiakkaita siirtyy halvempiin sopimuksiin. Luokka kertoo riskin suhteessa odotettuun tulokseen: matala enintään '+nf(M.rules.trLow,0)+' %, kohtalainen enintään '+nf(M.rules.trHigh,0)+' %, korkea jos heikko tulos on tappiollinen. Oletukset muutetaan Suositukset-näkymän säännöissä.</p></details>';
+    '<details class="flowd" data-keep="trinfo"'+(M.keep.trinfo?' open':'')+'><summary>Miten PaR lasketaan</summary><p class="note" style="margin-top:8px">Tulos riskissä (Profit at Risk, PaR) on odotetun ja heikon tuloksen erotus euroina. Mittari on skenaariopohjainen: heikko tulos lasketaan yhtiön omilla skenaarioilla eikä tilastollisella luottamustasolla. Samat skenaariot ovat käytössä Skenaariot-välilehdellä. Heikko tulos on pahin skenaarioista (kylmä talvi, leuto talvi tai hintasokki, korostettu palkki), ja siihen lisätään kuormaennusteen virhe ja suojaamattoman aluehintaeron (EPAD) riski. Sääskenaariot painotetaan jakson sääherkkyydellä, hintasokki on suurin lähijaksoilla. Kylmässä talvessa myös profiilikustannus kasvaa, ja leudossa toistaiseksi-asiakkaita siirtyy halvempiin sopimuksiin. Luokka kertoo riskin suhteessa odotettuun tulokseen: matala enintään '+nf(M.rules.trLow,0)+' %, kohtalainen enintään '+nf(M.rules.trHigh,0)+' %, korkea jos heikko tulos on tappiollinen. Oletukset muutetaan Suositukset-näkymän säännöissä.</p></details>';
 }
 function trSmall(t){return '<span class="rpill '+t.cls+'" style="margin-left:0">'+nf(t.risk,0)+' k€</span>';}
 M.shForm={c:null,j:0,type:"market",gwh:null,lim:null};M.shSim=null;
@@ -1140,7 +1140,7 @@ var toSnt=function(v){return v*.1255;};
 M.rules={coldP:35,coldV:8,mildP:-25,mildV:-7,mildChurn:1,shockP:30,renewRate:70,churnTois:1.5,epadVol:12,axpoThr:500,otcLimit:6000,corrBase:4,riskCap:3500,imPct:12,stressDrop:30,liqCap:9000,spotKate:0.5,trLow:25,trHigh:50,load03:8,load36:6,load612:5,riskLow:20,riskHigh:40,vol03:30,vol36:25,vol612:20,limitNear:8,h03:85,h412:60,h1324:30,minMargin:8,fixGap:1.5,spotGap:0.30,fwdAlarm:5,renewDays:45,riskPrem:8};M.rulesDefault=JSON.parse(JSON.stringify(M.rules));M.rgOpen={};M.recOpen={watch:false,ok:false};
 var RULEDEF=[
   ["Skenaariot","coldP","Kylmä talvi: hinta futuurista (talvijaksot)","%"],["Skenaariot","coldV","Kylmä talvi: kulutus ennusteesta","%"],["Skenaariot","mildP","Leuto talvi: hinta futuurista","%"],["Skenaariot","mildV","Leuto talvi: kulutus ennusteesta","%"],["Skenaariot","mildChurn","Leuto talvi: toistaiseksi-asiakkaiden lisäpoistuma","%/kk"],["Skenaariot","shockP","Hintasokki ilman säätä (±, lähijaksot)","%"],
-  ["Riskienhallinta","riskCap","Riskikapasiteetti: kestettävä PaR 12 kk","k€"],["Likviditeetti","liqCap","Käytettävissä oleva likviditeetti vakuuksiin","k€"],["Likviditeetti","imPct","Alkuvakuus pörssikaupoista","%"],["Likviditeetti","axpoThr","Axpo: vakuuskynnys","k€"],["Likviditeetti","otcLimit","OTC: vastapuolikohtainen limiitti","k€"],["Tulos riskissä (PaR)","epadVol","Aluehintaeron (EPAD) epävarmuus","€/MWh"],["Hinnoittelu","corrBase","Kausi- ja korrelaatiolisä talvijaksoille","€/MWh"],["Myynti","renewRate","Jatkotarjousten hyväksyntäaste","%"],["Myynti","churnTois","Toistaiseksi-sopimusten poistuma","%/kk"],
+  ["Riskienhallinta","riskCap","Riskikapasiteetti: kestettävä PaR 12 kk","k€"],["Tulos riskissä (PaR)","epadVol","Aluehintaeron (EPAD) epävarmuus","€/MWh"],["Hinnoittelu","corrBase","Kausi- ja korrelaatiolisä talvijaksoille","€/MWh"],["Myynti","renewRate","Jatkotarjousten hyväksyntäaste","%"],["Myynti","churnTois","Toistaiseksi-sopimusten poistuma","%/kk"],
   ["Riskienhallinta","h03","Suojausasteen minimi 0–3 kk","%"],["Riskienhallinta","h412","Suojausasteen minimi 4–12 kk","%"],["Riskienhallinta","h1324","Suojausasteen minimi 13–24 kk","%"],["Riskienhallinta","minMargin","Odotetun katteen minimi","€/MWh"],["Riskienhallinta","fwdAlarm","Futuurin viikkomuutoksen hälytysraja","%"],
   ["Hinnoittelu","fixGap","Määräaikaisen sallittu ero halvimpaan kilpailijaan","snt/kWh"],["Hinnoittelu","spotKate","Pörssisopimuksen tavoitekate","€/MWh"],["Hinnoittelu","spotGap","Pörssisopimuksen marginaalin sallittu ero halvimpaan","snt/kWh"],["Hinnoittelu","riskPrem","Määräaikaisen riskipreemio (12 kk)","€/MWh"],
   ["Tulos riskissä (PaR)","trLow","Matalan PaR:n yläraja (osuus odotetusta tuloksesta)","%"],["Tulos riskissä (PaR)","trHigh","Kohtalaisen PaR:n yläraja","%"],["Skenaariot","load03","Kuormaennusteen virhe 0–3 kk","%"],["Skenaariot","load36","Kuormaennusteen virhe 3–6 kk","%"],["Skenaariot","load612","Kuormaennusteen virhe 6–12 kk","%"],
@@ -1333,7 +1333,7 @@ function wireHinnoittelu(host){
 /* ---------- Näkymät ---------- */
 var c=function(n){return cssv(n);};
 var VIEWS=[
- {id:"yleiskuva",group:"Tilannekuva",name:"Yleiskuva",intro:"Neljä kysymystä aamuun: riski, muutokset, raha ja volyymi. Yksityiskohdat avautuvat korteista.",render:renderOverview},
+ {id:"yleiskuva",group:"Tilannekuva",name:"Yleiskuva",intro:"Neljä kysymystä aamuun: riski, muutokset, kate ja volyymi. Yksityiskohdat avautuvat korteista.",render:renderOverview},
  {id:"hinnat",group:"Kategoriat",name:"Hinnat",lic:["dp"],intro:"Suomen spot-hinta ja naapurialueiden hinnat 15 minuutin tarkkuudella.",build:function(){return {
    nyt:[
      kpi("FI keskihinta tänään",M.todayAvg,"€/MWh",["Vaihteluväli <b>"+nf(M.todayMin,1)+" – "+nf(M.todayMax,1)+"</b> €/MWh"],[S.spot]),
@@ -1519,7 +1519,7 @@ var VIEWS=[
    host.appendChild(bar);addFormSetup(host,bar,"salkku");
    var tabs=document.createElement("div");tabs.className="vtabs";tabs.setAttribute("role","tablist");tabs.setAttribute("aria-label","Salkun näkymä");
    var nSrc=M.salkku==="all"?M.src.length:M.src.filter(function(x){return x.hs===M.salkku;}).length;
-   tabs.innerHTML=[["positio","Positio ja riski","Suojausaste, PaR ja jaksot"],["hankinta","Hankinta",nSrc+" hankintalähdettä ja kaupat"],["skenaariot","Skenaariot","Kate ja vakuudet skenaarioittain"]].map(function(t,i){return '<button type="button" role="tab" data-tab="'+t[0]+'" aria-selected="'+(M.salkkuTab===t[0])+'"><span class="vt-n">'+(i+1)+'</span><span class="vt-t">'+t[1]+'</span><span class="vt-d">'+t[2]+'</span></button>';}).join("");
+   tabs.innerHTML=[["positio","Positio ja riski","Suojausaste, PaR ja jaksot"],["hankinta","Hankinta",nSrc+" hankintalähdettä ja kaupat"],["skenaariot","Skenaariot","Kate skenaarioittain"]].map(function(t,i){return '<button type="button" role="tab" data-tab="'+t[0]+'" aria-selected="'+(M.salkkuTab===t[0])+'"><span class="vt-n">'+(i+1)+'</span><span class="vt-t">'+t[1]+'</span><span class="vt-d">'+t[2]+'</span></button>';}).join("");
    host.appendChild(tabs);
    tabs.querySelectorAll("button[data-tab]").forEach(function(b){b.addEventListener("click",function(){M.salkkuTab=b.dataset.tab;keepScroll(render);});});
    if(M.salkkuTab==="hankinta"){
@@ -1550,7 +1550,7 @@ var VIEWS=[
      chartItem("Toteutunut tasekustannus, €/MWh viikoittain",{type:"bar",unit:"€/MWh",dec:2,data:{labels:OWN.wkLab,datasets:[ds("Tasekustannus",OWN.balHist,c("--s4"),{borderWidth:0,borderRadius:3})]}},[S.ownEtrm,S.fgImb],{half:true,short:true})
    ],
    ennuste:[
-     htmlItem("Skenaariokirjasto: spot-skenaariot",'<p class="note" style="margin-bottom:8px">Lisää todellisiin vuosiin tai tapahtumiin perustuva skenaario. Valitut skenaariot näkyvät taulukossa, PaR-luvussa ja vakuuslaskennassa.</p><div class="xsc">'+Object.keys(XSC).map(function(x){var on=M.xsc.indexOf(x)>=0;return '<button type="button" class="xsc-b" data-xsc="'+x+'" aria-pressed="'+on+'"><span class="xn">'+(on?'✓ ':'+ ')+XSC[x].n+'</span><span class="xd">'+XSC[x].d+'</span></button>';}).join("")+'</div><p class="note" style="margin-top:8px">'+etrmLink("Spot-skenaariot")+'</p>',[S.ownEtrm]),
+     htmlItem("Skenaariokirjasto: spot-skenaariot",'<p class="note" style="margin-bottom:8px">Lisää todellisiin vuosiin tai tapahtumiin perustuva skenaario. Valitut skenaariot näkyvät taulukossa ja PaR-luvussa.</p><div class="xsc">'+Object.keys(XSC).map(function(x){var on=M.xsc.indexOf(x)>=0;return '<button type="button" class="xsc-b" data-xsc="'+x+'" aria-pressed="'+on+'"><span class="xn">'+(on?'✓ ':'+ ')+XSC[x].n+'</span><span class="xd">'+XSC[x].d+'</span></button>';}).join("")+'</div><p class="note" style="margin-top:8px">'+etrmLink("Spot-skenaariot")+'</p>',[S.ownEtrm]),
      kpi("Kate 12 kk, normaali",pf.kate_norm/1000,"M€",["Origo: futuurihinnat"],[S.ownEtrm,S.fwd],2),
      kpi("Kate 12 kk, kylmä talvi",pf.kate_cold/1000,"M€",["Erotus origoon <b>"+sgn((pf.kate_cold-pf.kate_norm)/1000,2)+"</b> M€"],[S.ownEtrm,S.fmi],2),
      kpi("Kate 12 kk, leuto talvi",pf.kate_mild/1000,"M€",["Erotus origoon <b>"+sgn((pf.kate_mild-pf.kate_norm)/1000,2)+"</b> M€"],[S.ownEtrm,S.fmi],2),
@@ -1561,8 +1561,8 @@ var VIEWS=[
        var vak={norm:CL.now,cold:CL.now,mild:CL.byScen.mild,shockU:CL.now,shockD:CL.byScen.shockD};
        var as={norm:"Futuurihinnat ja ennuste",cold:"Hinta "+sgn(r.coldP,0)+" %, kulutus "+sgn(r.coldV,0)+" % talvella; profiilikustannus kasvaa",mild:"Hinta "+sgn(r.mildP,0)+" %, kulutus "+sgn(r.mildV,0)+" %; toistaiseksi-poistuma +"+nf(r.mildChurn,1)+" %/kk",shockU:"Hinta +"+nf(r.shockP,0)+" % lähijaksoilla, ei säävaikutusta",shockD:"Hinta −"+nf(r.shockP,0)+" % lähijaksoilla, ei säävaikutusta"};
        M.xsc.forEach(function(x){var kk="x:"+x;pf["kate_"+kk]=P.slice(0,7).reduce(function(z,r){return z+scenR(r,kk).R;},0);vak[kk]=CL.byScen[kk];as[kk]=(XSC[x].t==="combo"?"":"Spot-skenaario. ")+XSC[x].d;});
-       var row=function(k){var kt=pf["kate_"+k];return '<tr><td><b style="font-weight:500">'+(k==="norm"?"Normaali (origo)":scnName(k))+'</b><div class="note" style="font-size:12.5px">'+as[k]+'</div></td><td class="num">'+nf(kt/1000,2)+'</td><td class="num">'+(k==="norm"?'–':sgn((kt-pf.kate_norm)/1000,2))+'</td><td class="num">'+nf(vak[k]/1000,1)+'</td></tr>';};
-       return '<div class="tbl-wrap"><table><thead><tr><th>Skenaario</th><th class="num">Kate 12 kk M€</th><th class="num">Erotus M€</th><th class="num">Vakuustarve M€</th></tr></thead><tbody>'+["norm","cold","mild","shockU","shockD"].concat(M.xsc.map(function(x){return "x:"+x;})).map(row).join("")+'</tbody></table></div><p class="note" style="margin-top:8px">Sama hintaliike voi uhata tulosta tai kassaa: hinnan nousu heikentää katetta avoimella positiolla, hinnan lasku kasvattaa pörssisuojausten vakuustarvetta. Samat skenaariot ovat PaR-luvun ja yleiskuvan vakuuskortin pohjana. Oletukset muutetaan Suositukset-näkymän sääntöryhmässä Skenaariot.</p>';})(),[S.ownEtrm,S.ownSrc])),
+       var row=function(k){var kt=pf["kate_"+k];return '<tr><td><b style="font-weight:500">'+(k==="norm"?"Normaali (origo)":scnName(k))+'</b><div class="note" style="font-size:12.5px">'+as[k]+'</div></td><td class="num">'+nf(kt/1000,2)+'</td><td class="num">'+(k==="norm"?'–':sgn((kt-pf.kate_norm)/1000,2))+'</td></tr>';};
+       return '<div class="tbl-wrap"><table><thead><tr><th>Skenaario</th><th class="num">Kate 12 kk M€</th><th class="num">Erotus M€</th></tr></thead><tbody>'+["norm","cold","mild","shockU","shockD"].concat(M.xsc.map(function(x){return "x:"+x;})).map(row).join("")+'</tbody></table></div><p class="note" style="margin-top:8px">Samat skenaariot ovat PaR-luvun pohjana: heikoin skenaario määrää heikon tuloksen. Oletukset muutetaan Suositukset-näkymän sääntöryhmässä Skenaariot.</p>';})(),[S.ownEtrm,S.ownSrc])),
      chartItem("Myyntivolyymiennuste 12 kk, GWh",{type:"bar",unit:"GWh",dec:0,data:{labels:OWN.volLab,datasets:[ds("Kiinteä hinta",OWN.volFix,c("--s1"),{borderWidth:0,stack:"a"}),ds("Pörssi",OWN.volSpot,c("--s3"),{borderWidth:0,stack:"a"})]},options:{scales:{x:{stacked:true},y:{stacked:true}}}},[S.ownEtrm,S.fmi])
    ])};
    var rchart=v.nyt[5];
@@ -1614,10 +1614,10 @@ var VIEWS=[
    nyt:[
      kpi("Hankinnat 12 kk",hi.pf.hedged12,"GWh",["Myyty <b>"+nf(hi.pf.sold12,0)+"</b> GWh"],[S.ownEtrm],0),
      kpi("Suojausaste 12 kk",hi.pf.ratio12,"%",["Avoin positio <b>"+nf(hi.pf.open12,0)+"</b> GWh"],[S.ownEtrm],0),
-     (function(){var cl=collat(k);return kpi("Vakuustarve nyt",cl.now,"k€",["Pahimmassa skenaariossa <b>"+nf(cl.stress,0)+"</b> k€","OTC-limiitin käyttö enintään "+nf(cl.otcMax,0)+" %"],[S.ownSrc,S.fwd],0);})(),
+     (function(){var cl=collat(k);return kpi("Vakuusarvio (suuntaa-antava)",cl.now,"k€",["Pahimmassa skenaariossa <b>"+nf(cl.stress,0)+"</b> k€","OTC-limiitin käyttö enintään "+nf(cl.otcMax,0)+" %"],[S.ownSrc,S.fwd],0);})(),
      kpi("Hankintojen markkina-arvo",mine.reduce(function(s,x){return s+mtm(x);},0)/1000,"M€",["Futuurit 4.11.2026 vs. hankintahinta"],[S.ownSrc,S.fwd],2),
      chartItem("Hankinnat lähteittäin ja myyty volyymi, GWh",{type:"bar",unit:"GWh",dec:1,data:{labels:lab,datasets:dsets},options:{scales:{x:{stacked:true},y:{stacked:true}}}},[S.ownSrc,S.ownEtrm]),
-     htmlItem("Hankintalähteet",'<div class="tbl-wrap"><table><thead><tr><th>Tyyppi</th><th>Nimi</th><th>Vastapuoli tai tuote</th><th>Hintaperuste</th><th class="num">GWh 12 kk</th><th class="num">GWh 2028</th><th class="num">Keskihinta €/MWh</th><th class="num">Markkina-arvo k€</th><th class="num">Vakuus nyt / skenaariossa k€</th><th></th></tr></thead><tbody>'+(rows||'<tr><td colspan="10" class="note">Ei hankintalähteitä.</td></tr>')+'</tbody></table></div><p class="note" style="margin-top:8px">Hintaperuste kertoo, kattaako suojaus myös aluehintaeron (EPAD). Pelkkä systeemihinnan suojaus jättää aluehintaeron riskin, joka näkyy PaR-luvussa omana palkkinaan. EEX: alkuvakuus ja päivittäinen marginaali, Axpo: vakuus kynnyksen ylittävästä tappiosta, OTC: vastapuolilimiitin käyttö.</p>',[S.ownSrc,S.fwd]),
+     htmlItem("Hankintalähteet",'<div class="tbl-wrap"><table><thead><tr><th>Tyyppi</th><th>Nimi</th><th>Vastapuoli tai tuote</th><th>Hintaperuste</th><th class="num">GWh 12 kk</th><th class="num">GWh 2028</th><th class="num">Keskihinta €/MWh</th><th class="num">Markkina-arvo k€</th><th class="num">Vakuusarvio nyt / skenaariossa k€</th><th></th></tr></thead><tbody>'+(rows||'<tr><td colspan="10" class="note">Ei hankintalähteitä.</td></tr>')+'</tbody></table></div><p class="note" style="margin-top:8px">Hintaperuste kertoo, kattaako suojaus myös aluehintaeron (EPAD). Pelkkä systeemihinnan suojaus jättää aluehintaeron riskin, joka näkyy PaR-luvussa omana palkkinaan. Vakuusarvio on karkea ja suuntaa-antava: EEX alkuvakuus 12 % ja hinnanlaskun marginaali, Axpo kynnyksen ylittävä tappio, OTC vastapuolilimiitin käyttö. Todelliset vakuudet määräytyvät pörssin ja vastapuolten ehdoista.</p>',[S.ownSrc,S.fwd]),
      (function(o){o.id="hsForm";return o;})(htmlItem("Lisää hankintalähde",'<details class="flowd" data-keep="hsform"'+((M.keep.hsform||M.hsSim)?' open':'')+'><summary>Avaa lomake</summary>'+form+'</details>',[S.ownSrc,S.fwd])),
      htmlItem("Viimeisimmät hankintakaupat",'<div class="tbl-wrap"><table><thead><tr><th>Aika</th><th>Tuote</th><th class="num">GWh</th><th class="num">€/MWh</th><th>Kirjaus</th></tr></thead><tbody>'+(M.trades.filter(function(t){return t.sk===k;}).slice(0,6).map(function(t){return '<tr><td>'+t.t+'</td><td>'+t.prod+'</td><td class="num">'+nf(t.gwh,1)+'</td><td class="num">'+nf(t.price,2)+'</td><td>'+t.src+'</td></tr>';}).join("")||'<tr><td colspan="5" class="note">Ei kauppoja tälle salkulle.</td></tr>')+'</tbody></table></div><p class="note" style="margin-top:8px">Kaupat kirjautuvat salkkuun heti, ja positio, suojausaste ja kate päivittyvät samalla.</p>',[S.ownTrades])
    ],
@@ -1793,7 +1793,7 @@ var VIEWS=[
      chartItem(TK[sel][0]+": kulutus kuukausittain, % vuodesta",{type:"line",unit:"%",dec:1,data:{labels:ML,datasets:[ds(TK[sel][0],cur,c("--s1"),{borderWidth:2.4,pointRadius:3}),ds("Kerrostalo (vertailu)",base,c("--s3"),{borderDash:[5,4],borderWidth:1.5})]},options:{plugins:{legend:{display:true,position:"bottom",labels:{boxWidth:10,boxHeight:10,padding:14}}},scales:{x:{},y:{min:0}}}},[S.ownKv],{half:true,short:true}),
      (function(o){o.half=true;return o;})(noteItem("Mihin tyyppikäyrää käytetään","Myyntisalkun kulutusvaikutus on sen tyyppikäyrien painotettu keskiarvo, ja talvipaino kasvattaa kausi- ja korrelaatiolisää. Tarjouslaskuri käyttää tyyppikäyrää, kun asiakkaalta ei ole Datahub-ennustetta. Kampanjasimulointi vertaa kohdeprofiilia salkun jakaumaan ja sähkölämmittäjien valikoitumiseen."))
    ]};}},
- {id:"spot-skenaariot",group:"Konfigurointi",name:"Spot-skenaariot",lic:["own"],after:wireCfg,intro:"Todellisiin vuosiin tai tapahtumiin perustuvat hintaskenaariot. Analyyseissä mukana olevat skenaariot näkyvät salkun Skenaariot-välilehdellä, PaR-luvussa ja vakuuslaskennassa.",build:function(){
+ {id:"spot-skenaariot",group:"Konfigurointi",name:"Spot-skenaariot",lic:["own"],after:wireCfg,intro:"Todellisiin vuosiin tai tapahtumiin perustuvat hintaskenaariot. Analyyseissä mukana olevat skenaariot näkyvät salkun Skenaariot-välilehdellä ja PaR-luvussa.",build:function(){
    var lab=PER.map(function(p){return p[0];}),sel=M.xsSel,X=XSC[sel];
    var rows=Object.keys(XSC).map(function(x){var on=M.xsc.indexOf(x)>=0;return '<tr'+(sel===x?' class="selrow"':'')+'><td><button type="button" class="linkbtn" data-xssel="'+x+'">'+XSC[x].n+'</button><div class="note" style="font-size:12.5px">'+XSC[x].d+'</div></td>'+PER.map(function(_,i){return '<td class="num" style="white-space:nowrap">'+sgn(xP(x,i)*100,0)+' %</td>';}).join("")+'<td><button type="button" style="white-space:nowrap" class="btn sm'+(on?' pri':'')+'" data-xsc="'+x+'" aria-pressed="'+on+'">'+(on?'Mukana':'Ota mukaan')+'</button>'+(XSC[x].t==="combo"?' <button type="button" class="btn sm" data-cdel="'+x+'">Poista</button>':'')+'</td></tr>';}).join("");
    if(!X){sel=M.xsSel=Object.keys(XSC)[0];X=XSC[sel];}var fw=PER.map(function(p){return M.fwd[p[1]];}),sc=fw.map(function(f,i){return f*(1+xP(sel,i));});
@@ -1869,8 +1869,9 @@ function renderOverview(host){
   var top=imp.slice().sort(function(a,b){return Math.abs(b.eur)-Math.abs(a.eur);});
   var st2=impTot<-200?"act":impTot<-50?"watch":"ok";
   /* 3 raha */
-  var CL=collat(),need=CL.now,stress=CL.stress,liq=M.rules.liqCap;
-  var st3=(stress>liq||CL.otcMax>100)?"act":(stress>0.8*liq||CL.otcMax>80)?"watch":"ok";
+  var KO=OWN,ksum=function(a){return a.reduce(function(x,y){return x+y;},0);},kYB=ksum(KO.kBud)+KO.kNovBud+KO.kDecBud,kYF=ksum(KO.kAct)+(KO.kNovBud-28)+(KO.kDecBud-15),kD=kYF-kYB;
+  var kp0=perCalc("all",0),kLo=scenMargin(kp0,"cold")*scenVol(kp0,"cold")-kp0.margin*kp0.sold,kHi=scenMargin(kp0,"mild")*scenVol(kp0,"mild")-kp0.margin*kp0.sold;
+  var st3=kD<-0.05*kYB?"act":kD<0?"watch":"ok";
   /* 4 volyymi */
   var end90=OWN.endDaily.slice(0,90).reduce(function(s,v){return s+v;},0),gwh=end90*4.5/1000;
   var net4=OWN.products.reduce(function(s,x){return s+x[2];},0);
@@ -1880,10 +1881,10 @@ function renderOverview(host){
   var cards={
     riski:{q:"Olemmeko riskipolitiikan sisällä?",v:nf(util,0)+" %",l:"riskikapasiteetista käytössä",st:st1,d:["PaR 12 kk <b>"+nf(risk,0)+" k€</b>, raja "+nf(cap,0)+" k€.",viol?("<b>"+viol+"</b> "+(viol===1?"jakso":"jaksoa")+" alle suojausminimin."):"Kaikki jaksot suojausminimissä."],href:"#salkku"},
     muutos:{q:"Mikä muuttui ja mitä se tarkoittaa meille?",v:sgn(impTot,0)+" k€",l:"avoimen position arvo viikossa",st:st2,d:["Suurin vaikutus: "+top[0].name+" futuuri "+sgn(top[0].pct,1)+" %, "+sgn(top[0].eur,0)+" k€."],href:"#johdannaiset"},
-    raha:{q:"Riittääkö raha?",v:nf(need/1000,1)+" M€",l:"vakuustarve nyt",st:st3,d:["Pahimmassa skenaariossa ("+scnName(CL.stressK).toLowerCase()+") <b>"+nf(stress/1000,1)+" M€</b>, käytettävissä "+nf(liq/1000,1)+" M€.","EEX "+nf((CL.im+CL.vm)/1000,1)+" M€, Axpo "+nf(CL.axStress/1000,1)+" M€ skenaariossa. OTC-limiitin käyttö enintään "+nf(CL.otcMax,0)+" %."],href:"#hankinta"},
+    kate:{q:"Pysyykö kate budjetissa?",v:sgn(kD,0)+" k€",l:"koko vuoden ennuste vs. budjetti",st:st3,d:["Ennuste <b>"+nf(kYF,0)+" k€</b>, budjetti "+nf(kYB,0)+" k€.","Joulukuun epävarmuus: kylmä talvi "+sgn(kLo,0)+" k€, leuto "+sgn(kHi,0)+" k€."],href:"#kate"},
     volyymi:{q:"Pysyykö volyymi?",v:nf(end90,0),l:"sopimusta päättyy 90 vrk:n aikana",st:st4,d:["Noin <b>"+nf(gwh,1)+" GWh/v</b> uusittavana. Netto 4 vk "+sgn(net4,0)+" asiakasta.","Vaikutus positioon 12 kk: jatkotarjoukset <b>"+sgn(aR,1)+" GWh</b>, toistaiseksi-poistuma <b>"+sgn(aC,1)+" GWh</b>."],href:"#sopimuskanta"}
   };
-  var ORDER={kaikki:["riski","muutos","raha","volyymi"],riski:["riski","raha","muutos","volyymi"],myynti:["volyymi","muutos","riski","raha"],hinnoittelu:["muutos","volyymi","riski","raha"],salkunhallinta:["muutos","riski","raha","volyymi"]};
+  var ORDER={kaikki:["riski","muutos","kate","volyymi"],riski:["riski","muutos","kate","volyymi"],myynti:["volyymi","kate","muutos","riski"],hinnoittelu:["muutos","kate","volyymi","riski"],salkunhallinta:["muutos","riski","kate","volyymi"]};
   var role=M.role;
   var bar=document.createElement("div");bar.className="ctrlbar";
   bar.innerHTML='<span class="fresh">Näkymä roolille</span><div class="seg" role="group" aria-label="Rooli">'+ROLES.map(function(r){return '<button type="button" data-role="'+r[0]+'" aria-pressed="'+(r[0]===role)+'">'+r[1]+'</button>';}).join("")+'</div>';
@@ -1915,17 +1916,17 @@ function renderOverview(host){
 function renderGuide(host){
   var DOC=/claude/i.test(location.hostname)?"https://claude.ai/artifact/8std6Cs4MK7G5CMVUADbb3":"testausohje.pdf";
   var DEMO=[
-    ['<a href="#yleiskuva">Yleiskuva</a>','Neljä aamun kysymystä: riski, muutokset, raha ja volyymi. Mikä muuttui kääntää markkinamuutokset euroiksi.'],
+    ['<a href="#yleiskuva">Yleiskuva</a>','Neljä aamun kysymystä: riski, muutokset, kate ja volyymi. Mikä muuttui kääntää markkinamuutokset euroiksi.'],
     ['<a href="#kilpailijat">Markkinatilanne: Kilpailijat</a>','Sama data, jonka kuluttajakin näkee. Oma sijoitus ja paljonko hintaa pitäisi laskea.'],
-    ['<a href="#salkku">Salkku ja suojaus</a>','Positio ja tulos riskissä (PaR) euroina, syy ja keino. Hankinta-välilehdellä lähteet, EPAD ja vakuudet.'],
-    ['<a href="#salkku">Skenaariot</a>','Kylmä talvi, leuto talvi, hintasokki, spot-skenaariot ja yhdistelmät: kate ja vakuustarve rinnakkain.'],
+    ['<a href="#salkku">Salkku ja suojaus</a>','Positio ja tulos riskissä (PaR) euroina, syy ja keino. Hankinta-välilehdellä lähteet ja EPAD.'],
+    ['<a href="#salkku">Skenaariot</a>','Kylmä talvi, leuto talvi, hintasokki, spot-skenaariot ja yhdistelmät: kate rinnakkain.'],
     ['<a href="#suositukset">Suositukset</a>','Yhtiön omat säännöt tuottavat suositukset. Simuloi, hyväksy ja näytä päätöshistoria.'],
     ['<a href="#hinnoittelu">Hinnoittelu</a>','Hinta salkun profiilista, myynnin ja kampanjan vaikutus salkkuun ennen päätöstä.'],
     ['<a href="#asiakassalkku">Asiakassalkku</a>','Sama malli asiakkaan puolesta: strategia, toimeksianto ja raportti.']
   ];
   var G=[
    ["Työpajatestauksen tehtävät","1. Aamun tilannekuva","Noin 15 min, kaikki roolit",[
-     'Avaa <a href="#yleiskuva">Yleiskuva</a> ja lue neljä korttia. Kortin väri kertoo tilan: kunnossa, huomio tai toimenpide.',
+     'Avaa <a href="#yleiskuva">Yleiskuva</a> ja lue neljä korttia (riski, muutokset, kate ja volyymi). Kortin väri kertoo tilan: kunnossa, huomio tai toimenpide.',
      'Vaihda roolivalinta omaan rooliisi. Korttien järjestys ja Toimenpiteet-lista vaihtuvat.',
      'Lue Mikä muuttui -lista ja avaa yksi rivi.',
      'Avaa sivupalkista <a href="#hinnat">Markkinatilanne</a> ja selaa välilehdet, joita katsot päivittäin.'
@@ -1935,15 +1936,15 @@ function renderGuide(host){
      'Kirjoita perustelu ja paina "Hyväksy ja kirjaa suojaus".',
      'Avaa <a href="#salkku">Salkku ja suojaus</a>, valitse B2B kiinteät ja tarkista, että Joulukuu 26 ei ole enää punaisella.',
      'Avaa välilehti Hankinta ja Lisää hankintalähde. Valitse hintaperusteeksi Vain EPAD, anna määrä ja paina Simuloi: PaR pienenee.',
-     'Palaa <a href="#yleiskuva">Yleiskuvaan</a> ja lue Riittääkö raha -kortti.'
-   ],"Suosituksesta päätökseen ilman Exceliä. Suojaus, aluehintaero ja vakuudet samassa ketjussa."],
+     'Katso Hankinta-välilehden suuntaa-antava vakuusarvio. Pohdi, miten teillä vakuudet todellisuudessa määräytyvät.'
+   ],"Suosituksesta päätökseen ilman Exceliä. Suojaus ja aluehintaero samassa ketjussa."],
    ["Työpajatestauksen tehtävät","3. Skenaariot ja tulos riskissä","Noin 10 min, riskienhallinta ja johto",[
      'Avaa <a href="#salkku">Salkku ja suojaus</a>, välilehti Positio ja riski. Lue Tulos riskissä (PaR) -kortti ja Mitä luvut tarkoittavat.',
      'Avaa välilehti Skenaariot. Lisää skenaariokirjastosta spot-skenaario, esimerkiksi Vuoden 2027 hinnat 2022 hinnoista, ja lue taulukko Skenaariot yhdellä silmäyksellä.',
      'Vaihda salkkua: jokaisella salkulla on oma lähtötilanne (Hyvin hoidettu, Porrastettu suojaus, Kalliit suojaukset, Ylisuojattu, Alisuojattu). Vertaa, miten sama skenaario näkyy eri salkuissa.',
      'Avaa <a href="#suositukset">Suosituksissa</a> sääntöryhmä Skenaariot ja muuta Kylmä talvi: hinta 35 → 60.',
      'Palaa salkkuun: PaR, skenaariot ja yleiskuvan riskikortti muuttuvat, koska kaikki käyttävät samoja skenaarioita.'
-   ],"Yksi skenaariomalli tulokselle, PaR:lle ja vakuuksille. Sama hintaliike näkyy sekä katteessa että kassassa."],
+   ],"Yksi skenaariomalli katteelle ja PaR:lle. Heikoin skenaario määrää heikon tuloksen."],
    ["Työpajatestauksen tehtävät","4. Hinnoittelu ja kilpailutilanne","Noin 10 min, hinnoittelu ja myynti",[
      'Avaa <a href="#kilpailijat">Markkinatilanne: Kilpailijat</a>, valitse Kiinteä 12 kk ja vaihtele kulutusta. Lue oma sijoitus.',
      'Avaa <a href="#hinnoittelu">Hinnoittelu</a>, valitse Kiinteä 12 kk ja käy läpi hinnan komponentit sekä salkun tyyppikäyrät.',
@@ -1991,7 +1992,7 @@ function renderGuide(host){
      'Valitse Ylisuojattu (toistaiseksi) ja avaa Skenaariot: kylmä talvi parantaa katetta, leuto talvi heikentää. PaR-kortin syy on leuto talvi.',
      'Valitse Kalliit suojaukset (24 kk) ja avaa Hankinta: markkina-arvo on selvästi negatiivinen ja kate ohut, vaikka riski on pieni.',
      'Valitse Porrastettu suojaus (12 kk) ja avaa Hankinta: kolme erää eri aikoina, ja systeemihintaiset erät on täydennetty EPAD-suojauksella.'
-   ],"Työkalu näyttää, miten eri tavat hoitaa suojausta näkyvät riskissä, skenaarioissa, katteessa ja vakuuksissa."],
+   ],"Työkalu näyttää, miten eri tavat hoitaa suojausta näkyvät riskissä, skenaarioissa ja katteessa."],
    ["Akamonin esittelyyn","Lisenssit ja datan tila","Noin 3 min, tuote ja hankinta",[
      'Paina oikean yläkulman Näytä datan tila. Korteissa näkyvät lähteiden tilat ja yläosaan merkinnät.',
      'Paina esimerkiksi "Dataplatformissa, lisenssi varmistettava": muut kortit himmenevät.',
@@ -2143,14 +2144,14 @@ var WZT=[
    ["Paina suosituksen Lisäsuojaus … Joulukuu 26 (B2B kiinteät) kohdalla Simuloi ja katso vaikutus.",{h:"#suositukset",sel:'.rec[data-id="h-b2b-0"]'}],
    ["Kirjoita perustelu ja paina Hyväksy ja kirjaa suojaus.",{h:"#suositukset",sel:'.rec[data-id="h-b2b-0"]'}],
    ["Tarkista B2B-salkun jaksoista, että Joulukuu 26 ei ole enää punaisella.",{h:"#salkku",sk:"b2b",tab:"positio",sel:"h3:Jaksot"}],
-   ["Tutustu Hankinta-välilehdellä lähteisiin, hintaperusteeseen ja vakuustarpeeseen.",{h:"#salkku",sk:"b2b",tab:"hankinta",sel:"h3:Hankintalähteet"}],
+   ["Tutustu Hankinta-välilehdellä lähteisiin ja hintaperusteeseen.",{h:"#salkku",sk:"b2b",tab:"hankinta",sel:"h3:Hankintalähteet"}],
    ["Avaa Lisää hankintalähde, valitse hintaperusteeksi Vain EPAD, anna määrä ja paina Simuloi.",{h:"#salkku",sk:"b2b",tab:"hankinta",open:"hsform",sel:"#hsForm"}],
-   ["Lue yleiskuvan Riittääkö raha -kortti.",{h:"#yleiskuva",sel:"txt:.qcard|Riittääkö raha"}]],
-  q:["Riittävätkö tiedot suojauspäätökseen? Mitä katsot ennen päätöstä nykyään?","Vastaavatko hankintalähteet ja vakuuslaskenta teidän todellisuuttanne? Mitä puuttuu?"]},
+   ["Katso suuntaa-antava vakuusarvio Hankinta-välilehdellä.",{h:"#salkku",sk:"b2b",tab:"hankinta",sel:"h3:Vakuusarvio"}]],
+  q:["Riittävätkö tiedot suojauspäätökseen? Mitä katsot ennen päätöstä nykyään?","Vastaavatko hankintalähteet teidän todellisuuttanne? Mitä puuttuu?","Miten vakuutenne määräytyvät, ja mistä seuraatte niitä?"]},
  {id:"t3",n:"Skenaariot ja tulos riskissä",steps:[
    ["Lue Tulos riskissä (PaR) -kortti ja sen alla Mitä luvut tarkoittavat.",{h:"#salkku",sk:"all",tab:"positio",sel:"h3:Tulos riskissä"}],
    ["Lisää skenaariokirjastosta Vuoden 2027 hinnat 2022 hinnoista.",{h:"#salkku",sk:"all",tab:"skenaariot",sel:"h3:Skenaariokirjasto"}],
-   ["Lue taulukko Skenaariot yhdellä silmäyksellä: kate ja vakuustarve rinnakkain.",{h:"#salkku",sk:"all",tab:"skenaariot",sel:"h3:Skenaariot yhdellä"}],
+   ["Lue taulukko Skenaariot yhdellä silmäyksellä.",{h:"#salkku",sk:"all",tab:"skenaariot",sel:"h3:Skenaariot yhdellä"}],
    ["Vaihda salkkua ja vertaa lähtötilanteita (Hyvin hoidettu, Ylisuojattu, Alisuojattu).",{h:"#salkku",tab:"skenaariot",sel:".ch-list"}],
    ["Muuta sääntöryhmästä Skenaariot Kylmä talvi: hinta 35 → 60.",{h:"#suositukset",rg:"Skenaariot",sel:'details.rgrp[data-g="Skenaariot"]'}],
    ["Palaa salkkuun ja katso, miten PaR ja yleiskuvan riskikortti muuttuivat.",{h:"#salkku",sk:"all",tab:"positio",sel:"h3:Tulos riskissä"}]],
@@ -2183,7 +2184,7 @@ var WZT=[
    ["Valitse taulukosta helmikuu.",{h:"#kate",sel:"tr.pick"}],
    ["Lue vesiputous ja selitys suurimmasta syystä alkaen.",{h:"#kate",sel:".whylist"}],
    ["Katso ennuste ja loppuvuoden epävarmuusväli.",{h:"#kate",sel:"h2:Ennuste"}],
-   ["Lue yleiskuvan riskikortti johdon näkökulmasta.",{h:"#yleiskuva",sel:"txt:.qcard|riskipolitiikan"}]],
+   ["Lue yleiskuvan Pysyykö kate budjetissa -kortti.",{h:"#yleiskuva",sel:"txt:.qcard|Pysyykö kate"}]],
   q:["Riittääkö selitys johtoryhmälle? Mitä johto kysyy ensimmäisenä?","Miten ja kuinka usein raportoitte katetta ja riskiä nykyään?"]},
  {id:"t9",n:"Säännöt ja suositukset",steps:[
    ["Avaa työtäsi koskeva sääntöryhmä ja muuta yksi raja vastaamaan teidän rajaanne.",{h:"#suositukset",sel:".rgrp"}],
