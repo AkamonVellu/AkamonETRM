@@ -1,0 +1,27 @@
+Akamon ETRM 2.0 -demo: julkaisu omalle palvelimelle
+====================================================
+
+Sisältö
+- index.html        Demo ja testausopas yhtenä tiedostona (Chart.js mukana, ei asennuksia)
+- testausohje.pdf   Testausohje, johon demon Demo-ohjeet-sivu linkittää
+
+Julkaisu
+1. Kopioi molemmat tiedostot samaan kansioon millä tahansa staattisella
+   verkkopalvelimella (esim. Azure Static Web Apps, akamon.fi:n alasivu).
+   Tiedostojen pitää olla samassa kansiossa, jotta linkki testausohjeeseen toimii.
+2. Suojaa sivu salasanalla tai käytä arvaamatonta osoitetta.
+3. Avaa sivu itse ja käy testausopas läpi ennen jakamista.
+
+Toiminta ilman Claude-tiliä
+- Demo, testausopas, vastausten tallennus selaimeen, Kopioi Teamsiin
+  ja Tallenna tiedostoksi toimivat tavallisessa selaimessa.
+- Vastaukset säilyvät testaajan omassa selaimessa (localStorage), kunnes
+  hän painaa "Aloita alusta". Eri selain tai kone aloittaa tyhjästä.
+- Data on keksittyä esimerkkidataa. Kilpailijoiden hinnat ja futuurit ovat
+  julkisia esimerkkilukuja (27.10. ja 4.11.2026).
+- Fontit ladataan Google Fontsista. Jos yhteys estetään, sivu käyttää
+  järjestelmän fontteja.
+
+Huomio testausohjeesta
+- PDF:n kohdassa "Avaa demo" on linkki Claude-versioon. Kerro osallistujille
+  oman julkaisun osoite kutsussa, tai pyydä Claudelta uusi PDF oikealla linkillä.
